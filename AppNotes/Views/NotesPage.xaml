@@ -7,6 +7,7 @@
         <Editor x:Name="TextEditor"
                 Placeholder="Enter your note here"
                 HeightRequest="100"
+                Text="{Binding Text}"
                 />
         <Grid ColumnDefinitions="100,100"
               ColumnSpacing="4">

@@ -2,11 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppNotes.Views.AboutPage"
+             xmlns:models="clr-namespace:AppNotes.Models"
              Title="AboutPage">
+    <ContentPage.BindingContext>
+        <models:About/>
+   
+    </ContentPage.BindingContext>
     <VerticalStackLayout>
         <HorizontalStackLayout>
             <Image Source="dotnet_bot.png"
-                   SemanticProperties.Description="The dotnet bot waving hello !!"
+                   SemanticProperties.Description="{Binding Title}"
                    HeightRequest="64"/>
             <Label FontSize="25"
                    FontAttributes="Bold"
@@ -14,11 +19,11 @@
 
             <Label FontSize="25"
                    FontAttributes="Italic"
-                   Text="v1.0"
+                   Text="{Binding Version}"
                    VerticalOptions="Start"
                    Padding="0"/>
         </HorizontalStackLayout>
-        <Label   FontSize="22" Text="App Written In MAUI" HorizontalOptions="Center"/>
+        <Label   FontSize="22" Text="{Binding Message}" HorizontalOptions="Center"/>
         <Button Text="Learn More..." Clicked="LearnMore_Clicked" HorizontalOptions="Center" Margin="20"/>
 
 

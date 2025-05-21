@@ -1,32 +1,63 @@
-namespace AppNotes.Views;
+using System.Threading.Tasks;
 
+namespace AppNotes.Views;
+[QueryProperty(nameof(ItemId), nameof(ItemId))]
 public partial class NotesPage : ContentPage
 {
+
     //Search for the AppDataDirectory in whatever OS and create a textfile called AppNotes.txt
-    string _fileName = Path.Combine(FileSystem.AppDataDirectory, "Appnotes.txt");
+    //string _fileName = Path.Combine(FileSystem.AppDataDirectory, "AppNotes.txt");
+    public string ItemId{ set { LoadNote(value); } }
     public NotesPage()
     {
         InitializeComponent();
 
-        if (File.Exists(_fileName))
-        {
-            TextEditor.Text = File.ReadAllText(_fileName);
-        }
+        string pathFile = FileSystem.AppDataDirectory;
+        string randomFileName = $"{Path.GetRandomFileName()}.Notes.txt";
+
+        LoadNote(Path.Combine(pathFile, randomFileName));
     }
 
-    private void DeleteButton_Clicked(object sender, EventArgs e)
+    private async void  DeleteButton_Clicked(object sender, EventArgs e)
     {
         //Delete the file
-        if (File.Exists(_fileName))
+
+        if(BindingContext is Models.Note note)
         {
-            File.Delete(_fileName);
+            if (File.Exists(note.FilenName))
+            {
+                File.Delete(note.FilenName);
+            }
+
         }
-        TextEditor.Text = String.Empty;
-      
+        //Nos vamos a la pagina  de la cual viene
+        await Shell.Current.GoToAsync("..");
+
     }
 
-    private void SaveButton_Clicked(object sender, EventArgs e)
+    private async void SaveButton_Clicked(object sender, EventArgs e)
     {
-        File.WriteAllText(_fileName, TextEditor.Text);
+        if(BindingContext is Models.Note note)
+        {
+            File.WriteAllText(note.FilenName, TextEditor.Text);
+            await Shell.Current.GoToAsync("..");
+        }
     }
+
+
+
+    private void LoadNote(string fileName)
+    {
+        Models.Note note = new Models.Note();
+        note.FilenName = fileName;
+
+        if (File.Exists(fileName))
+        {
+            note.Date = File.GetCreationTime(fileName);
+            note.Text = File.ReadAllText(fileName);
+        }
+
+        BindingContext = note;
+    }
+
 }
